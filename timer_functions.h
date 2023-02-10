@@ -10,7 +10,6 @@ struct TimerMap{
 
 extern TimerMap pinTimers[6];
 extern volatile byte count;
-extern byte reload;
 extern const int LED_pin;
 
 void setupTimers();

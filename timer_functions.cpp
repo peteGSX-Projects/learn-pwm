@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "timer_functions.h"
+#include "serial_function.h"
 
 TimerMap pinTimers[6] = {
   {3, 2},
@@ -11,16 +12,16 @@ TimerMap pinTimers[6] = {
 };
 
 volatile byte count;
-byte reload = 0x9C;
 const int LED_pin = 13;
+bool state = LOW;
 
 void setupTimers() {
   cli();
-  TCCR0B = 0; 
-  OCR2A = reload;
-  TCCR2A = 1<<WGM21;
-  TCCR2B = (1<<CS22) | (1<<CS21) | (1<<CS20);
-  TIMSK2 = (1<<OCIE2A);
+  TCCR2A = (1<<WGM21);  // Wave form generation mode CTC
+  TCCR2B = (1<<CS22) | (1<<CS21) | (1<<CS20); // Prescalar 1024
+  TIMSK2 = (1<<OCIE2A);   // Interrupt when compare match with OCR2A
+  OCR2A = 124;
+  pinMode(LED_pin, OUTPUT);
   sei();
   Serial.print("OCR2A: "); 
   Serial.println(OCR2A, HEX);
@@ -40,6 +41,11 @@ void flash() {
 }
 
 ISR(TIMER2_COMPA_vect) {
-  count++;
-  OCR2A = reload;
+  static uint8_t counter = 0;
+  counter++;
+  if (counter == pwm) {
+    state = !state;
+    digitalWrite(LED_pin, state);
+    counter = 0;
+  }
 }

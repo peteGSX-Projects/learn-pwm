@@ -11,6 +11,14 @@ PCA9685 set to 50Hz clock
 
 Focus on timer 2 (pin 3) to start.
 Step 1 - get timer 2 to 50Hz (to match PCA9685).
+
+f * scale factor = clock / (prescalar * (1 + top))
+
+50 * 1 = 16000000
+          ------
+      prescalar * 256
+
+prescalar 1024 closest to 50Hz
 */
 
 void setup() {
