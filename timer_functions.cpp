@@ -20,7 +20,7 @@ void setupTimers() {
   TCCR2A = (1<<WGM21);  // Wave form generation mode CTC
   TCCR2B = (1<<CS22) | (1<<CS21) | (1<<CS20); // Prescalar 1024
   TIMSK2 = (1<<OCIE2A);   // Interrupt when compare match with OCR2A
-  OCR2A = 124;
+  OCR2A = 255;
   pinMode(LED_pin, OUTPUT);
   sei();
   Serial.print("OCR2A: "); 
@@ -43,9 +43,9 @@ void flash() {
 ISR(TIMER2_COMPA_vect) {
   static uint8_t counter = 0;
   counter++;
-  if (counter == pwm) {
-    state = !state;
-    digitalWrite(LED_pin, state);
-    counter = 0;
+  if (counter <= pwm) {
+    digitalWrite(LED_pin, HIGH);
+  } else {
+    digitalWrite(LED_pin, LOW);
   }
 }

@@ -9,16 +9,9 @@ https://arbaranwal.github.io/tutorial/2017/06/23/atmega328-register-reference.ht
 https://wolles-elektronikkiste.de/en/timer-and-pwm-part-1-8-bit-timer0-2
 PCA9685 set to 50Hz clock
 
-Focus on timer 2 (pin 3) to start.
-Step 1 - get timer 2 to 50Hz (to match PCA9685).
+We need to enable a full 16bit PWM signal at 50Hz, so count 0 - 65535 50 times a second.
 
-f * scale factor = clock / (prescalar * (1 + top))
-
-50 * 1 = 16000000
-          ------
-      prescalar * 256
-
-prescalar 1024 closest to 50Hz
+Value being sent is the "on" part of the duty cycle.
 */
 
 void setup() {
@@ -30,8 +23,8 @@ void setup() {
 
 void loop() {
   processSerialInput();
-  if (count == pwm) {
-    flash();
-    count = 0;
-  }
+  // if (count == pwm) {
+  //   flash();
+  //   count = 0;
+  // }
 }

@@ -5,7 +5,7 @@
 bool newSerialData = false;   // Flag for new serial data being received
 const byte numSerialChars = 10;   // Max number of chars for serial input
 char serialInputChars[numSerialChars];  // Char array for serial input
-unsigned long pwm = 50;
+unsigned long pwm = 0;
 
 void processSerialInput() {
   static bool serialInProgress = false;
