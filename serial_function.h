@@ -2,8 +2,9 @@
 #define SERIAL_FUNCTION_H
 
 #include <Arduino.h>
+#include "globals.h"
 
-extern unsigned long pwm;
+extern unsigned long dutyCycle;
 
 void processSerialInput();
 

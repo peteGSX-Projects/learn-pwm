@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include "globals.h"
 #include "timer_functions.h"
 #include "serial_function.h"
 
@@ -13,13 +14,15 @@ Use timer 2, clock speed doesn't matter, pure duty cycle based PWM signal output
 Maybe 10000 max = 100.00% effectively
 */
 
+bool ledState = 0;
+unsigned long ledPin = 17;
+
 void setup() {
   Serial.begin(115200);
-  pinMode(LED_pin, OUTPUT);
-  digitalWrite(LED_pin, LOW);
-  // setupTimers();
+  Serial.println(F("Learning timers"));
+  setupTimer();
 }
 
 void loop() {
-  
+  processSerialInput();
 }
