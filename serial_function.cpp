@@ -5,7 +5,7 @@
 bool newSerialData = false;   // Flag for new serial data being received
 const byte numSerialChars = 10;   // Max number of chars for serial input
 char serialInputChars[numSerialChars];  // Char array for serial input
-unsigned long dutyCycle = 0;
+uint16_t dutyCycle = 0;
 
 void processSerialInput() {
   static bool serialInProgress = false;
@@ -36,12 +36,20 @@ void processSerialInput() {
     newSerialData = false;
     char * strtokIndex;
     strtokIndex = strtok(serialInputChars, " ");
-    ledPin = strtol(strtokIndex, NULL, 10);
+    unsigned long setLED = strtol(strtokIndex, NULL, 10);
     strtokIndex = strtok(NULL, " ");
-    dutyCycle = strtol(strtokIndex, NULL, 10);
+    unsigned long setDutyCycle = strtol(strtokIndex, NULL, 10);
     Serial.print(F("Set pin "));
     Serial.print(ledPin);
     Serial.print(F(" duty cycle to "));
+    Serial.println(setDutyCycle);
+    // dutyCycle = map(setDutyCycle, 0, 10000, 0, pwmCycle);
+    dutyCycle = setDutyCycle;
     Serial.println(dutyCycle);
+    if (setLED == 1) {
+      digitalWrite(ledPin, HIGH);
+    } else {
+      digitalWrite(ledPin, LOW);
+    }
   }
 }

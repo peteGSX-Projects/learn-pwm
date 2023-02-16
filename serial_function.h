@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include "globals.h"
 
-extern unsigned long dutyCycle;
+extern uint16_t pwmCycle;
 
 void processSerialInput();
 

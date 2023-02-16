@@ -3,6 +3,8 @@
 
 #include <Arduino.h>
 
+extern uint16_t pwmCycle;
+
 void setupTimer();
 
 #endif

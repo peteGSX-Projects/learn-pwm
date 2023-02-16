@@ -16,6 +16,7 @@ Maybe 10000 max = 100.00% effectively
 
 bool ledState = 0;
 unsigned long ledPin = 17;
+unsigned long lastUpdate = 0;
 
 void setup() {
   Serial.begin(115200);
