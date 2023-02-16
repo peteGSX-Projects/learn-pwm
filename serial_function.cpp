@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "serial_function.h"
 #include "timer_functions.h"
+#include "EXIODimmer.h"
 
 bool newSerialData = false;   // Flag for new serial data being received
 const byte numSerialChars = 10;   // Max number of chars for serial input
@@ -45,11 +46,6 @@ void processSerialInput() {
     Serial.println(setDutyCycle);
     // dutyCycle = map(setDutyCycle, 0, 10000, 0, pwmCycle);
     dutyCycle = setDutyCycle;
-    Serial.println(dutyCycle);
-    if (setLED == 1) {
-      digitalWrite(ledPin, HIGH);
-    } else {
-      digitalWrite(ledPin, LOW);
-    }
+    
   }
 }

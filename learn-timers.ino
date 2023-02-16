@@ -2,6 +2,7 @@
 #include "globals.h"
 // #include "timer_functions.h"
 #include "serial_function.h"
+#include "EXIODimmer.h"
 
 /*
 Refs:
