@@ -31,6 +31,7 @@ class EXIODimmer {
   public:
     EXIODimmer();
     uint8_t attach(uint8_t pin);
+    bool attached();
     void detach();
     void write(uint16_t value);
 

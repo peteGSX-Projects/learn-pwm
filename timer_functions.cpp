@@ -2,6 +2,21 @@
 #include "globals.h"
 #include "timer_functions.h"
 
+void dimLED(uint8_t pin, uint16_t value) {
+  Serial.print(F("Pin|Value: "));
+  Serial.print(pin);
+  Serial.print(F("|"));
+  Serial.println(value);
+  for (uint8_t i = 0; i < MAX_DIMMERS; i++) {
+    if (pinToDimmer[i].physicalPin == pin) {
+      if (!pinToDimmer[i].dimmerObject.attached()) {
+        pinToDimmer[i].dimmerObject.attach(pinToDimmer[i].physicalPin);
+      }
+      pinToDimmer[i].dimmerObject.write(value);
+    }
+  }
+}
+
 // uint16_t pwmCycle = 255;
 
 // void setupTimer() {

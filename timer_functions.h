@@ -3,8 +3,6 @@
 
 #include <Arduino.h>
 
-// extern uint16_t pwmCycle;
-
-// void setupTimer();
+void dimLED(uint8_t pin, uint16_t value);
 
 #endif

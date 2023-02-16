@@ -1,8 +1,9 @@
 #include <Arduino.h>
 #include "globals.h"
-// #include "timer_functions.h"
+#include "timer_functions.h"
 #include "serial_function.h"
 #include "EXIODimmer.h"
+#include "nano_dimmers.h"
 
 /*
 Refs:

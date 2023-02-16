@@ -40,12 +40,8 @@ void processSerialInput() {
     unsigned long setLED = strtol(strtokIndex, NULL, 10);
     strtokIndex = strtok(NULL, " ");
     unsigned long setDutyCycle = strtol(strtokIndex, NULL, 10);
-    Serial.print(F("Set pin "));
-    Serial.print(ledPin);
-    Serial.print(F(" duty cycle to "));
-    Serial.println(setDutyCycle);
-    // dutyCycle = map(setDutyCycle, 0, 10000, 0, pwmCycle);
+    dutyCycle = map(setDutyCycle, 0, 1000, 0, 255);
     dutyCycle = setDutyCycle;
-    
+    dimLED(setLED, dutyCycle);
   }
 }

@@ -32,13 +32,14 @@ SIGNAL (TIMER2_OVF_vect) {
 }
 
 static void initISR() {
-  TCCR2A = (0x00);  // Wave form generation
+  TCCR0B = 0;
+  TCCR2A = (0<<WGM20) + (0<<WGM21);  // Wave form generation
   TCCR2B = (0<<CS22) + (0<<CS21) + (1<<CS20); // Clock speed (no prescaler)
   TIMSK2 = (1<<TOIE2);  // Interrupt when TCNT2 overflows
-  TIFR2 |= _BV(OCF1A);     // clear any pending interrupts
+  // TIFR2 |= _BV(OCF1A);     // clear any pending interrupts
 }
 
-static boolean isTimerActive() {
+static bool isTimerActive() {
   for (uint8_t channel = 0; channel < MAX_DIMMERS; channel++) {
     if (dimmers[channel].pin.isActive == true) {
       return true;
@@ -63,11 +64,20 @@ uint8_t EXIODimmer::attach(uint8_t pin) {
   if (this->dimmerIndex < MAX_DIMMERS) {
     pinMode(pin, OUTPUT);
     if (isTimerActive()) {
+      Serial.println(F("Active"));
       initISR();
     }
     dimmers[this->dimmerIndex].pin.isActive = true;
   }
   return this->dimmerIndex;
+}
+
+bool EXIODimmer::attached() {
+  if (dimmers[this->dimmerIndex].pin.isActive) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 void EXIODimmer::detach() {
