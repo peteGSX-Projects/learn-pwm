@@ -3,22 +3,53 @@
 #include <Arduino.h>
 #include "EXIODimmer.h"
 
-#define DIMMER_INDEX_TO_TIMER(_dimmer_nbr) ((timer8_Sequence)(_dimmer_nbr))
-#define DIMMER_INDEX_TO_CHANNEL(_dimmer_nbr) (_dimmer_nbr)
-#define DIMMER_INDEX(_timer,_channel)  ((_timer*MAX_DIMMERS) + _channel)
-#define DIMMER(_timer,_channel)  (dimmers[DIMMER_INDEX(_timer,_channel)])
-
+/* 
+  Variables
+*/
 static Dimmer dimmers[MAX_DIMMERS];
 uint8_t dimmerCount = 0;
 
-static boolean isTimerActive(timer8_Sequence timer) {
+/*
+  Static functions
+*/
+static inline void handle_interrupts() {
+  for (uint8_t dimmerIndex = 0; dimmerIndex < MAX_DIMMERS; dimmerIndex++) {
+    static uint16_t counter = 0;
+    counter++;
+    if (counter <= dimmers[dimmerIndex].onValue) {
+      digitalWrite(dimmers[dimmerIndex].pin.nbr, HIGH);
+    } else {
+      digitalWrite(dimmers[dimmerIndex].pin.nbr, LOW);
+    }
+    if (counter == 256) {
+      counter = 0;
+    }
+  }
+}
+
+SIGNAL (TIMER2_OVF_vect) {
+  handle_interrupts();
+}
+
+static void initISR() {
+  TCCR2A = (0x00);  // Wave form generation
+  TCCR2B = (0<<CS22) + (0<<CS21) + (1<<CS20); // Clock speed (no prescaler)
+  TIMSK2 = (1<<TOIE2);  // Interrupt when TCNT2 overflows
+  TIFR2 |= _BV(OCF1A);     // clear any pending interrupts
+}
+
+static boolean isTimerActive() {
   for (uint8_t channel = 0; channel < MAX_DIMMERS; channel++) {
-    if (DIMMER(timer, channel).pin.isActive == true) {
+    if (dimmers[channel].pin.isActive == true) {
       return true;
     }
   }
   return false;
 }
+
+/*
+  Constructor and functions
+*/
 
 EXIODimmer::EXIODimmer() {
   if (dimmerCount < MAX_DIMMERS) {
@@ -31,6 +62,9 @@ EXIODimmer::EXIODimmer() {
 uint8_t EXIODimmer::attach(uint8_t pin) {
   if (this->dimmerIndex < MAX_DIMMERS) {
     pinMode(pin, OUTPUT);
+    if (isTimerActive()) {
+      initISR();
+    }
     dimmers[this->dimmerIndex].pin.isActive = true;
   }
   return this->dimmerIndex;

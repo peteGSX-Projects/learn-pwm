@@ -3,9 +3,7 @@
 
 #include <Arduino.h>
 
-#if defined(ARDUINO_ARCH_AVR)
-#include "avr/EXIODimmerTimers.h"
-#else
+#if !defined(ARDUINO_ARCH_AVR)
 #error "This library only works with AVR."
 #endif
 

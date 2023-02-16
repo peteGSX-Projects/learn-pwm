@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include "globals.h"
-#include "timer_functions.h"
+// #include "timer_functions.h"
 #include "serial_function.h"
 
 /*
@@ -21,7 +21,7 @@ unsigned long lastUpdate = 0;
 void setup() {
   Serial.begin(115200);
   Serial.println(F("Learning timers"));
-  setupTimer();
+  // setupTimer();
 }
 
 void loop() {
