@@ -1,12 +1,12 @@
 #include <Arduino.h>
 #include "serial_function.h"
 #include "timer_functions.h"
-#include "EXIODimmer.h"
+// #include "EXIODimmer.h"
 
 bool newSerialData = false;   // Flag for new serial data being received
 const byte numSerialChars = 10;   // Max number of chars for serial input
 char serialInputChars[numSerialChars];  // Char array for serial input
-uint16_t dutyCycle = 0;
+volatile uint16_t dutyCycle = 0;
 
 void processSerialInput() {
   static bool serialInProgress = false;
@@ -40,8 +40,17 @@ void processSerialInput() {
     unsigned long setLED = strtol(strtokIndex, NULL, 10);
     strtokIndex = strtok(NULL, " ");
     unsigned long setDutyCycle = strtol(strtokIndex, NULL, 10);
+    if (setDutyCycle > 1000) {
+      setDutyCycle = 1000;
+    } else if (setDutyCycle < 0) {
+      setDutyCycle = 0;
+    }
     dutyCycle = map(setDutyCycle, 0, 1000, 0, 255);
-    dutyCycle = setDutyCycle;
+    Serial.print(F("LED|duty cycle: "));
+    Serial.print(setLED);
+    Serial.print(F("|"));
+    Serial.println(dutyCycle);
+    // OCR2A = dutyCycle;
     dimLED(setLED, dutyCycle);
   }
 }

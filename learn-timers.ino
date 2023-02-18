@@ -24,6 +24,8 @@ void setup() {
   Serial.begin(115200);
   Serial.println(F("Learning timers"));
   // setupTimer();
+  pinMode(ledPin, OUTPUT);
+  digitalWrite(ledPin, LOW);
 }
 
 void loop() {

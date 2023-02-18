@@ -18,13 +18,9 @@
 #define MAX_ON 255
 
 typedef struct {
-  uint8_t nbr;
-  uint8_t isActive;
-} DimmerPin;
-
-typedef struct {
-  DimmerPin pin;
-  uint16_t onValue;
+  uint8_t physicalPin;
+  bool isActive;
+  uint8_t onValue;
 } Dimmer;
 
 class EXIODimmer {
@@ -33,7 +29,7 @@ class EXIODimmer {
     uint8_t attach(uint8_t pin);
     bool attached();
     void detach();
-    void write(uint16_t value);
+    void write(uint8_t value);
 
   private:
     uint8_t dimmerIndex;

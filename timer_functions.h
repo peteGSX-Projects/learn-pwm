@@ -3,6 +3,8 @@
 
 #include <Arduino.h>
 
-void dimLED(uint8_t pin, uint16_t value);
+void dimLED(uint8_t pin, uint8_t value);
+// void setupTimer();
+// void handleInterrupts(volatile uint8_t *TCNTn, volatile uint8_t *OCRnA);
 
 #endif
