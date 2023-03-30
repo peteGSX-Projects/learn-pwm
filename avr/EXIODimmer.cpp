@@ -6,7 +6,7 @@
 /* 
   Variables
 */
-static Dimmer dimmers[MAX_DIMMERS];
+static dimmerDefinition dimmers[MAX_DIMMERS];
 uint8_t dimmerCount = 0;
 static volatile uint8_t counter = 0;
 
@@ -94,15 +94,6 @@ void EXIODimmer::write(uint8_t value) {
     cli();
     dimmers[channel].onValue = value;
     SREG = oldSREG;
-  }
-  for (uint8_t Channel = 0; Channel < MAX_DIMMERS; Channel++) {
-    Serial.print(Channel);
-    Serial.print(F("|"));
-    Serial.print(dimmers[Channel].isActive);
-    Serial.print(F("|"));
-    Serial.print(dimmers[Channel].physicalPin);
-    Serial.print(F("|"));
-    Serial.println(dimmers[Channel].onValue);
   }
 }
 

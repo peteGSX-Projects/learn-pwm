@@ -7,7 +7,7 @@
 #error "This library only works with AVR."
 #endif
 
-#if defined(ARDUINO_AVR_NANO) || defined(ARDUINO_AVR_PRO)
+#if defined(ARDUINO_AVR_NANO) || defined(ARDUINO_AVR_PRO) || defined(ARDUINO_AVR_UNO)
 #define MAX_DIMMERS 16
 #elif defined(ARDUINO_AVR_MEGA2560) || defined(ARDUINO_AVR_MEGA)
 #define MAX_DIMMERS 62
@@ -21,7 +21,7 @@ typedef struct {
   uint8_t physicalPin;
   bool isActive;
   uint8_t onValue;
-} Dimmer;
+} dimmerDefinition;
 
 class EXIODimmer {
   public:
