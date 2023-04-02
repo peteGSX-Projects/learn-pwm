@@ -9,25 +9,38 @@
 static dimmerDefinition dimmers[MAX_DIMMERS];
 uint8_t dimmerCount = 0;
 static volatile uint8_t counter = 0;
+static volatile int8_t dimmerChannel;
 
 /*
   Static functions
 */
-static inline void handle_interrupts() {
-  for (uint8_t i = 0; i < MAX_DIMMERS; i++) {
-    if (dimmers[i].isActive) {
-      if (counter < dimmers[i].onValue) {
-        digitalWrite(dimmers[i].physicalPin, HIGH);
-      } else {
-        digitalWrite(dimmers[i].physicalPin, LOW);
-      }
+static inline void handle_interrupts(volatile uint8_t *TCNTn, volatile uint8_t* OCRnA) {
+  // Serial.print(F("Interrupt for dimmer channel "));
+  // Serial.println(dimmerChannel);
+  if (dimmerChannel < 0) {
+    *TCNTn = 0;
+  } else {
+    if (dimmerChannel < dimmerCount && dimmers[dimmerChannel].isActive == true) {
+      digitalWrite(dimmers[dimmerChannel].physicalPin, LOW);
     }
   }
-  counter++;
+  
+  dimmerChannel++;
+  if (dimmerChannel < dimmerCount) {
+    // Serial.print(F("Interrupt for dimmer on pin "));
+    // Serial.println(dimmers[dimmerChannel].physicalPin);
+    *OCRnA = *TCNTn + dimmers[dimmerChannel].onValue;
+    if (dimmers[dimmerChannel].isActive == true) {
+      digitalWrite(dimmers[dimmerChannel].physicalPin, HIGH);
+    } else {
+      *OCRnA = *TCNTn;
+      dimmerChannel = -1;
+    }
+  }
 }
 
 SIGNAL (TIMER2_COMPA_vect) {
-  handle_interrupts();
+  handle_interrupts(&TCNT2, &OCR2A);
 }
 
 static void initISR() {
@@ -36,7 +49,6 @@ static void initISR() {
   TCNT2 = 0;
   TIFR2 = (1<<OCF2A);   // Clear pending interrupts
   TIMSK2 = (1<<OCIE2A); // Interrupt when hitting OCR2A
-  OCR2A = 1;
 }
 
 static bool isTimerActive(uint8_t channel) {
