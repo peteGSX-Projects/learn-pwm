@@ -30,6 +30,7 @@ class EXIODimmer {
     bool attached();
     void detach();
     void write(uint8_t value);
+    uint8_t read();
 
   private:
     uint8_t dimmerIndex;

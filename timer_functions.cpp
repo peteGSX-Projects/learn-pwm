@@ -14,5 +14,11 @@ void dimLED(uint8_t pin, uint8_t value) {
       }
       pinToDimmer[i].dimmerObject.write(value);
     }
+    Serial.print(F("pin|attached|onValue: "));
+    Serial.print(pinToDimmer[i].physicalPin);
+    Serial.print(F("|"));
+    Serial.print(pinToDimmer[i].dimmerObject.attached());
+    Serial.print(F("|"));
+    Serial.println(pinToDimmer[i].dimmerObject.read());
   }
 }

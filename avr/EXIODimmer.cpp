@@ -14,11 +14,9 @@ static volatile int8_t dimmerChannel;
 /*
   Static functions
 */
-static inline void handle_interrupts(volatile uint8_t *TCNTn, volatile uint8_t* OCRnA) {
-  // Serial.print(F("Interrupt for dimmer channel "));
-  // Serial.println(dimmerChannel);
+static inline void handle_interrupts() {
   if (dimmerChannel < 0) {
-    *TCNTn = 0;
+    TCNT2 = 0;
   } else {
     if (dimmerChannel < dimmerCount && dimmers[dimmerChannel].isActive == true) {
       digitalWrite(dimmers[dimmerChannel].physicalPin, LOW);
@@ -27,20 +25,18 @@ static inline void handle_interrupts(volatile uint8_t *TCNTn, volatile uint8_t* 
   
   dimmerChannel++;
   if (dimmerChannel < dimmerCount) {
-    // Serial.print(F("Interrupt for dimmer on pin "));
-    // Serial.println(dimmers[dimmerChannel].physicalPin);
-    *OCRnA = *TCNTn + dimmers[dimmerChannel].onValue;
+    OCR2A = TCNT2 + dimmers[dimmerChannel].onValue;
     if (dimmers[dimmerChannel].isActive == true) {
       digitalWrite(dimmers[dimmerChannel].physicalPin, HIGH);
     } else {
-      *OCRnA = *TCNTn;
+      OCR2A = TCNT2;
       dimmerChannel = -1;
     }
   }
 }
 
 SIGNAL (TIMER2_COMPA_vect) {
-  handle_interrupts(&TCNT2, &OCR2A);
+  handle_interrupts();
 }
 
 static void initISR() {
@@ -106,6 +102,14 @@ void EXIODimmer::write(uint8_t value) {
     cli();
     dimmers[channel].onValue = value;
     SREG = oldSREG;
+  }
+}
+
+uint8_t EXIODimmer::read() {
+  if (this->dimmerIndex != INVALID_DIMMER) {
+    return dimmers[this->dimmerIndex].onValue;
+  } else {
+    return 0;
   }
 }
 
