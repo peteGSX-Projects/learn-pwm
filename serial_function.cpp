@@ -1,6 +1,4 @@
 #include <Arduino.h>
-#include "serial_function.h"
-#include "timer_functions.h"
 
 bool newSerialData = false;   // Flag for new serial data being received
 const byte numSerialChars = 10;   // Max number of chars for serial input
@@ -45,6 +43,6 @@ void processSerialInput() {
       setDutyCycle = 0;
     }
     dutyCycle = map(setDutyCycle, 0, 1000, 0, 255);
-    dimLED(setLED, dutyCycle);
+    // dimLED(setLED, dutyCycle);
   }
 }
