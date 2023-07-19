@@ -3,6 +3,10 @@
 
 #include <Arduino.h>
 
+// The variables all need to be marked volatile because they may be accessed by loop and interrupt code.
+// The constructor and setpattern routines should really use nointerrupt() ... or there is a small risk of lost values. 
+// It would be worth creating a static setPattern(pinid, oncount, offcount)  so the caller didn't have to remember the pointers.
+
 class SuperPin  {
     public:
       static void start();
