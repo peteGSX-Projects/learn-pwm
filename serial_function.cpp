@@ -37,12 +37,12 @@ void processSerialInput() {
     unsigned long setLED = strtol(strtokIndex, NULL, 10);
     strtokIndex = strtok(NULL, " ");
     unsigned long setDutyCycle = strtol(strtokIndex, NULL, 10);
-    if (setDutyCycle > 1000) {
-      setDutyCycle = 1000;
-    } else if (setDutyCycle < 0) {
-      setDutyCycle = 0;
-    }
-    dutyCycle = map(setDutyCycle, 0, 1000, 0, 255);
+    // if (setDutyCycle > 1000) {
+    //   setDutyCycle = 1000;
+    // } else if (setDutyCycle < 0) {
+    //   setDutyCycle = 0;
+    // }
+    // dutyCycle = map(setDutyCycle, 0, 1000, 0, 255);
     // dimLED(setLED, dutyCycle);
   }
 }

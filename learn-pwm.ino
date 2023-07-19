@@ -15,17 +15,17 @@ unsigned long previousMicros = 0;
 // Interval between updates/frequency ~38KHz
 unsigned long microInterval = 26;
 
+SuperPin pinD2(2);
+SuperPin pinD13(13);
+SuperPin pinA3(A3);
+
 void setup() {
   Serial.begin(115200);
   Serial.println(F("Software PWM testing"));
   Serial.println(F("Set PWM/dimming duty cycle with <pin value>"));
-  Serial.println(F("Value is 0 - 1000 which maps to 0 - 255"));
+  Serial.println(F("Value is 0 - 255"));
 }
 
 void loop() {
   processSerialInput();
-}
-
-void processSuperPins() {
-
 }
