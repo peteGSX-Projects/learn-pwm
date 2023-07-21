@@ -12,9 +12,10 @@ class SuperPin  {
       static void start();
       SuperPin(byte _pinid);
       void setPattern(byte _onCount, byte _offCount);
+      static void interrupt();
 
     private:
-      static void interrupt();
+      // static void interrupt();
       void tick();
       static SuperPin* firstPin;
       SuperPin* next;
