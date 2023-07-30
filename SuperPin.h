@@ -1,26 +1,38 @@
+/*
+ *  © 2023, Chris Harlow and Peter Cole. All rights reserved.
+ *  
+ *  This file is part of EX-IOExpander.
+ *
+ *  This is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  It is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with CommandStation.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #ifndef SuperPin_h
 #define SuperPin_h
-
-#include <Arduino.h>
-
-// The variables all need to be marked volatile because they may be accessed by loop and interrupt code.
-// The constructor and setpattern routines should really use nointerrupt() ... or there is a small risk of lost values. 
-// It would be worth creating a static setPattern(pinid, oncount, offcount)  so the caller didn't have to remember the pointers.
-
+#include "Arduino.h"
 class SuperPin  {
     public:
-      static void start();
+      static void setPattern(byte pinId, byte _onCount, byte _offCount);
+      static void set(byte pinId, bool high);
+      static void loop();
+      
+    private:
       SuperPin(byte _pinid);
       void setPattern(byte _onCount, byte _offCount);
-      static void interrupt();
-
-    private:
-      // static void interrupt();
       void tick();
-      static SuperPin* firstPin;
-      SuperPin* next;
-      byte onCount, offCount, runningCount;
-      bool pinState;
-      byte pinId;
+      static SuperPin* volatile firstPin;
+      SuperPin* volatile next;
+      volatile byte pinId, onCount, offCount, runningCount;
+      volatile bool pinState;
 };
 #endif
